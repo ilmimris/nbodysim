@@ -11,17 +11,17 @@
 
 ### Details
 
-*  #### animation.py
+*  **animation.py**
 ⋅⋅⋅about animation example using matplotlib.animation module.
 
-*  #### animation3body.py
+*  **animation3body.py**
 ⋅⋅⋅about animation 3 body simulation using hermite as integrator. 
 
-*  #### animationNbody.py
+*  **animationNbody.py**
 ⋅⋅⋅about animation N body simulation using hermite as integrator and given mass = 1 M_sun
 
-*  #### euler.py
+*  **euler.py**
 
-*  #### hermite.py
+*  **hermite.py**
 
-*  #### leapfrog.py
+*  **leapfrog.py**

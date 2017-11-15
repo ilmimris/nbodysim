@@ -6,7 +6,7 @@ start_time = time.time()
 
 n = 3
 dt = 0.01
-t_end = 1000
+t_end = 10
 m = np.ones(n)
 
 r = np.zeros([n,3])
@@ -80,7 +80,7 @@ def plummer():
 		v[i,1] = v_abs * np.sin( theta ) * np.sin( phi )
 		v[i,2] = v_abs * np.cos( theta )
 
-nol_V()
+circle()
 
 for i in range(n):
 	for k in range(3):
@@ -255,20 +255,18 @@ traily = []
 
 fig = plt.figure(0)
 l2, = plt.plot([],[],"g.", markersize=3)
-l1, = plt.plot([],[],"r*", markersize=7)
+l1, = plt.plot([],[],"r*", markersize=1)
 
 plt.xlim(-2,2)
 plt.ylim(-2,2)
 
-# line_ani = animation.FuncAnimation(fig, update_line, len(rx), fargs=(rx,ry,l1,l2), interval=10)
-line_ani = animation.FuncAnimation(fig, update_line_notrail, len(rx), fargs=(rx,ry,l2), interval=20)
+line_ani = animation.FuncAnimation(fig, update_line, len(rx), fargs=(rx,ry,l1,l2), interval=10)
+# line_ani = animation.FuncAnimation(fig, update_line_notrail, len(rx), fargs=(rx,ry,l2), interval=20)
 
 e_out = ekin + epot
 print "Final total energy E_out = {} \n".format(e_out)
 print "absolute energy error: E_out - E_in = {} \n".format(e_out - e_in)
 print "relative energy error: (E_out - E_in) / E_in = {} ".format((e_out - e_in) / e_in )
-
-print a
-
 print("--- %s seconds ---" % (time.time() - start_time))
+line_ani.save("circle-{}-body.mp4".format(n), fps=60)
 plt.show()

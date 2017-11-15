@@ -1,58 +1,86 @@
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 import time
 start_time = time.time()
 
-# m = [1,1,1]
-
-n = int(input("Masukkan n benda : "))
-dt = float(input("Please provide a value for the time step = "))
-t_end = int(input(" and for the duration of the run = "))
-m = []
-for _ in range(n):
-	__ = float(input("Masukkan massa benda ke-{} = ".format(_+1)))
-	m.append(__)
+n = 3
+dt = 0.01
+t_end = 1000
+m = [1,1,1]
 
 r = np.zeros([n,3])
 v = np.zeros([n,3])
 a = np.zeros([n,3])
 jk = np.zeros([n,3])
 
-# for i in range(n):
-# 	phi = i * 2 * np.pi / n
-# 	r[i,0] = np.cos(phi)
-# 	r[i,1] = np.sin(phi)
-# 	r[i,2] = 0
-# v_abs = 1.0/np.sqrt(np.sqrt(3))
-# for i in range(n):
-# 	phi = i * 2 * np.pi / n
-# 	v[i,0] = - v_abs * np.sin(phi)
-# 	v[i,1] = v_abs * np.cos(phi)
-# 	v[i,2] = 0
+def circle():
+	for i in range(n):
+		phi = i * 2 * np.pi / n
+		r[i,0] = np.cos(phi)
+		r[i,1] = np.sin(phi)
+		r[i,2] = 0
+	v_abs = 1.0/np.sqrt(np.sqrt(3))
+	for i in range(n):
+		phi = i * 2 * np.pi / n
+		v[i,0] = - v_abs * np.sin(phi)
+		v[i,1] = v_abs * np.cos(phi)
+		v[i,2] = 0
 
-## Inf shape
-r[0][0] = 0.9700436
-r[0][1] = -0.24308753
-r[0][2] = 0
-v[0][0] = 0.466203685
-v[0][1] = 0.43236573
-v[0][2] = 0
+def nol_V():
+	for i in range(n):
+		phi = i * 2 * np.pi / n
+		r[i,0] = np.cos(phi)
+		r[i,1] = np.sin(phi)
+		r[i,2] = 0
+	v_abs = 0.
+	for i in range(n):
+		phi = i * 2 * np.pi / n
+		v[i,0] = - v_abs * np.sin(phi)
+		v[i,1] = v_abs * np.cos(phi)
+		v[i,2] = 0
 
-r[1][0] = -r[0][0]
-r[1][1] = -r[0][1]
-r[1][2] = -r[0][2]
-v[1][0] = v[0][0]
-v[1][1] = v[0][1]
-v[1][2] = v[0][2]
+def inf():
+	## Inf shape
+	r[0][0] = 0.9700436
+	r[0][1] = -0.24308753
+	r[0][2] = 0
+	v[0][0] = 0.466203685
+	v[0][1] = 0.43236573
+	v[0][2] = 0
 
-r[2][0] = 0
-r[2][1] = 0
-r[2][2] = 0
-v[2][0] = -2 * v[0][0]
-v[2][1] = -2 * v[0][1]
-v[2][2] = -2 * v[0][2];
+	r[1][0] = -r[0][0]
+	r[1][1] = -r[0][1]
+	r[1][2] = -r[0][2]
+	v[1][0] = v[0][0]
+	v[1][1] = v[0][1]
+	v[1][2] = v[0][2]
 
-## End Shape inf
+	r[2][0] = 0
+	r[2][1] = 0
+	r[2][2] = 0
+	v[2][0] = -2 * v[0][0]
+	v[2][1] = -2 * v[0][1]
+	v[2][2] = -2 * v[0][2]
+	## End Shape inf
+
+def frand(low, high):
+	return low + np.random.rand() * (high - low)
+	pass
+
+
+def plummer(n,seed):
+	for i in range(n):
+		rad = 1.
+		theta = np.acos(frand(-1,1))
+	v_abs = 1.0/np.sqrt(np.sqrt(3))
+	for i in range(n):
+		phi = i * 2 * np.pi / n
+		v[i,0] = - v_abs * np.sin(phi)
+		v[i,1] = v_abs * np.cos(phi)
+		v[i,2] = 0
+
+nol_V()
 
 for i in range(n):
 	for k in range(3):
@@ -85,9 +113,6 @@ for i in range(n):
 			a[j,k] -= m[i] * rji[k] / r3
 			jk[i,k] += m[j] * (vji[k] - 3 * rv * rji[k]) / r3
 			jk[j,k] -= m[i] * (vji[k] - 3 * rv * rji[k]) / r3			
-		
-	
-
 
 v[0,0] += 0.0001
 ekin = 0
@@ -122,6 +147,10 @@ old_r=np.zeros([n,3])
 old_v=np.zeros([n,3])
 old_a=np.zeros([n,3])
 old_j=np.zeros([n,3])
+
+rx = []
+ry = []
+rz = []
 
 for t in range(t_end):
 	for i in range(n):
@@ -175,9 +204,18 @@ for t in range(t_end):
 	# 			print " {} ".format(v[i][k])
 	# 		print "\n"
 	# 	t_out += dt_out
-	plt.plot(r[:,0],r[:,1],"r.")
-
+	# fig = plt.figure(0)
+	# l, = plt.plot(r[:,0],r[:,1],"b.")
+	
+	rx.append(np.array(r[:,0]))
+	ry.append(np.array(r[:,1]))
+	rz.append(np.array(r[:,2]))
+	
+rx = np.array(rx)
+ry = np.array(ry)
+rz = np.array(rz)
 epot = ekin = 0
+
 for i in range(n):
 	j = i + 1
 	for j in range(j,n):
@@ -195,6 +233,28 @@ for i in range(n):
 	for k in range(3):
 		ekin += 0.5 * m[i] * v[i,k] * v[i,k]
 
+
+
+def update_line(num, rx, ry, line1, line2):
+    xx = rx[num, :]
+    yy = ry[num, :]
+    trailx.append(xx)
+    traily.append(yy)
+    line1.set_data(xx,yy)
+    line2.set_data(trailx, traily)
+    return line1, line2
+    
+trailx = []
+traily = []
+
+fig = plt.figure(0)
+l2, = plt.plot([],[],"g.", markersize=5)
+l1, = plt.plot([],[],"r*", markersize=7)
+
+plt.xlim(-2,2)
+plt.ylim(-2,2)
+
+line_ani = animation.FuncAnimation(fig, update_line, len(rx), fargs=(rx,ry,l1,l2), interval=10)
 
 e_out = ekin + epot
 print "Final total energy E_out = {} \n".format(e_out)

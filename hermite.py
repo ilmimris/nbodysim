@@ -3,56 +3,81 @@ import numpy as np
 import time
 start_time = time.time()
 
-# m = [1,1,1]
-
-n = int(input("Masukkan n benda : "))
-dt = float(input("Please provide a value for the time step = "))
-t_end = int(input(" and for the duration of the run = "))
-m = []
-for _ in range(n):
-	__ = float(input("Masukkan massa benda ke-{} = ".format(_+1)))
-	m.append(__)
+n = 3
+dt = 0.01
+t_end = 10
+m = np.zeros(n)
+m[:] = 1
 
 r = np.zeros([n,3])
 v = np.zeros([n,3])
 a = np.zeros([n,3])
 jk = np.zeros([n,3])
 
-# for i in range(n):
-# 	phi = i * 2 * np.pi / n
-# 	r[i,0] = np.cos(phi)
-# 	r[i,1] = np.sin(phi)
-# 	r[i,2] = 0
-# v_abs = 1.0/np.sqrt(np.sqrt(3))
-# for i in range(n):
-# 	phi = i * 2 * np.pi / n
-# 	v[i,0] = - v_abs * np.sin(phi)
-# 	v[i,1] = v_abs * np.cos(phi)
-# 	v[i,2] = 0
+def elips():
+	for i in range(n):
+		phi = i * 2 * np.pi / n
+		r[i,0] = np.cos(phi)
+		r[i,1] = np.sin(phi)
+		r[i,2] = 0
+	v_abs = 1.0/np.sqrt(np.sqrt(3))
+	for i in range(n):
+		phi = i * 2 * np.pi / n
+		v[i,0] = - v_abs * np.sin(phi)
+		v[i,1] = v_abs * np.cos(phi)
+		v[i,2] = 0
 
-## Inf shape
-r[0][0] = 0.9700436
-r[0][1] = -0.24308753
-r[0][2] = 0
-v[0][0] = 0.466203685
-v[0][1] = 0.43236573
-v[0][2] = 0
+def circle():
+	for i in range(n):
+		phi = i * 2 * np.pi / n
+		r[i,0] = np.cos(phi)
+		r[i,1] = np.sin(phi)
+		r[i,2] = 0
+	v_abs = .5/np.sqrt(np.sqrt(3))
+	for i in range(n):
+		phi = i * 2 * np.pi / n
+		v[i,0] = - v_abs * np.sin(phi)
+		v[i,1] = v_abs * np.cos(phi)
+		v[i,2] = 0
 
-r[1][0] = -r[0][0]
-r[1][1] = -r[0][1]
-r[1][2] = -r[0][2]
-v[1][0] = v[0][0]
-v[1][1] = v[0][1]
-v[1][2] = v[0][2]
+def inf():
+	## Inf shape
+	r[0][0] = 0.9700436
+	r[0][1] = -0.24308753
+	r[0][2] = 0
+	v[0][0] = 0.466203685
+	v[0][1] = 0.43236573
+	v[0][2] = 0
 
-r[2][0] = 0
-r[2][1] = 0
-r[2][2] = 0
-v[2][0] = -2 * v[0][0]
-v[2][1] = -2 * v[0][1]
-v[2][2] = -2 * v[0][2];
+	r[1][0] = -r[0][0]
+	r[1][1] = -r[0][1]
+	r[1][2] = -r[0][2]
+	v[1][0] = v[0][0]
+	v[1][1] = v[0][1]
+	v[1][2] = v[0][2]
 
-## End Shape inf
+	r[2][0] = 0
+	r[2][1] = 0
+	r[2][2] = 0
+	v[2][0] = -2 * v[0][0]
+	v[2][1] = -2 * v[0][1]
+	v[2][2] = -2 * v[0][2]
+	## End Shape inf
+
+def nol_V():
+	for i in range(n):
+		phi = i * 2 * np.pi / n
+		r[i,0] = np.cos(phi)
+		r[i,1] = np.sin(phi)
+		r[i,2] = 0
+	v_abs = 0.
+	for i in range(n):
+		phi = i * 2 * np.pi / n
+		v[i,0] = - v_abs * np.sin(phi)
+		v[i,1] = v_abs * np.cos(phi)
+		v[i,2] = 0
+
+elips()
 
 for i in range(n):
 	for k in range(3):
@@ -113,7 +138,7 @@ for i in range(n):
 		ekin += 0.5 * m[i] * v[i,k] * v[i,k]
 
 e_in = ekin + epot
-print "Initial total energy E_in = {} \n".format(e_in)
+print ("Initial total energy E_in = {} \n".format(e_in))
 
 dt_out = 0.01
 t_out = dt_out
@@ -123,7 +148,7 @@ old_v=np.zeros([n,3])
 old_a=np.zeros([n,3])
 old_j=np.zeros([n,3])
 
-for t in range(t_end):
+for t in np.arange(0,t_end,dt):
 	for i in range(n):
 		for k in range(3):
 			old_r[i,k] = r[i,k]
@@ -197,8 +222,10 @@ for i in range(n):
 
 
 e_out = ekin + epot
-print "Final total energy E_out = {} \n".format(e_out)
-print "absolute energy error: E_out - E_in = {} \n".format(e_out - e_in)
-print "relative energy error: (E_out - E_in) / E_in = {} ".format((e_out - e_in) / e_in )
-print("--- %s seconds ---" % (time.time() - start_time))
+print ("Final total energy E_out = {}".format(e_out))
+print ("absolute energy error: E_out - E_in = {}".format(e_out - e_in))
+print ("relative energy error: (E_out - E_in) / E_in = {}".format((e_out - e_in) / e_in ))
+print("Finished %s seconds" % (time.time() - start_time))
+plt.xlabel("X (AU)")
+plt.ylabel("Y (AU)")
 plt.show()
